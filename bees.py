@@ -1,4 +1,3 @@
-
 import time
 import csv
 import math
@@ -10,9 +9,9 @@ from scipy.spatial import distance
 class Bee:
     def __init__(self, node_set):
         self.role = ''
-        self.path = list(node_set) # stores all nodes in each bee, will randomize foragers
+        self.path = list(node_set)  # stores all nodes in each bee, will randomize foragers
         self.distance = 0
-        self.cycle = 0 # number of iterations on current solution
+        self.cycle = 0  # number of iterations on current solution
 
 
 def read_data_from_csv(file_name):
@@ -36,7 +35,7 @@ def make_distance_table(data_list):
     """
     length = len(data_list)
     table = [[get_distance_between_nodes(
-        (data_list[i][1],data_list[i][2]), (data_list[j][1],data_list[j][2]))
+        (data_list[i][1], data_list[i][2]), (data_list[j][1], data_list[j][2]))
         for i in range(0, length)] for j in range(0, length)]
     return table
 
@@ -62,7 +61,7 @@ def initialize_hive(population, data):
     Bees will have a randomized path attribute.
     """
     path = [x[0] for x in data]
-    hive = [Bee(path) for i in range (0, population)]
+    hive = [Bee(path) for i in range(0, population)]
     return hive
 
 
@@ -86,6 +85,7 @@ def assign_roles(hive, role_percentiles, table):
 
     return hive
 
+
 def mutate_path(path):
     """
     Gets a random index 0 to next to last element.
@@ -96,6 +96,7 @@ def mutate_path(path):
     new_path = list(path)
     new_path[random_idx], new_path[random_idx + 1] = new_path[random_idx + 1], new_path[random_idx]
     return new_path
+
 
 def forage(bee, table, limit):
     """
@@ -108,10 +109,10 @@ def forage(bee, table, limit):
     if new_distance < bee.distance:
         bee.path = new_path
         bee.distance = new_distance
-        bee.cycle = 0 # reset cycle so bee can continue to make progress
+        bee.cycle = 0  # reset cycle so bee can continue to make progress
     else:
         bee.cycle += 1
-    if bee.cycle >= limit: # if bee is not making progress
+    if bee.cycle >= limit:  # if bee is not making progress
         bee.role = 'S'
     return bee.distance, list(bee.path)
 
@@ -150,8 +151,8 @@ def waggle(hive, best_distance, table, forager_limit, scout_count):
             scout(hive[i], table)
 
     # after processing all bees, set worst performers to scout
-    results.sort(reverse = True, key=lambda tup: tup[1])
-    scouts = [ tup[0] for tup in results[0:int(scout_count)] ]
+    results.sort(reverse=True, key=lambda tup: tup[1])
+    scouts = [tup[0] for tup in results[0:int(scout_count)]]
     for new_scout in scouts:
         hive[new_scout].role = 'S'
     return best_distance, best_path
@@ -205,37 +206,39 @@ def main():
     cycle_limit = 2500
     cycle = 1
 
-
     data = read_data_from_csv("data/data_12.csv")
 
     best_distance = sys.maxsize
     best_path = []
     result = ()
 
-
     print("Files has saved ")
-    result_file = "results/{}_nodes/results_{}_nodes_{}_bees_{}_scouts_{}_cycles_{}_forager_limit.csv".format(len(data), len(data), population, scout_count, cycle_limit, forager_limit)
+    result_file = "results/{}_nodes/results_{}_nodes_{}_bees_{}_scouts_{}_cycles_{}_forager_limit.csv".format(len(data),
+                                                                                                              len(data),
+                                                                                                              population,
+                                                                                                              scout_count,
+                                                                                                              cycle_limit,
+                                                                                                              forager_limit)
 
     # Initialization
     table = make_distance_table(data)
     hive = initialize_hive(population, data)
     assign_roles(hive, role_percent, table)
 
-
     while cycle < cycle_limit:
         waggle_distance, waggle_path = waggle(hive, best_distance, table, forager_limit, scout_count)
         if waggle_distance < best_distance:
             best_distance = waggle_distance
             best_path = list(waggle_path)
-            print_details(cycle, best_path, best_distance,'F')
-            result = (cycle, best_path, best_distance,'F')
+            print_details(cycle, best_path, best_distance, 'F')
+            result = (cycle, best_path, best_distance, 'F')
 
         recruit_distance, recruit_path = recruit(hive, best_distance, best_path, table)
         if recruit_distance < best_distance:
             best_distance = recruit_distance
             best_path = list(recruit_path)
-            print_details(cycle, best_path, best_distance,'R')
-            result = (cycle, best_path, best_distance,'R')
+            print_details(cycle, best_path, best_distance, 'R')
+            result = (cycle, best_path, best_distance, 'R')
 
         if cycle % 1000 == 0:
             print("CYCLE #: {}\n".format(cycle))
@@ -247,19 +250,13 @@ def main():
     make_csv(result, result_file)
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
-    start_millis = int(round(time.time() * 1000))
-    print(start_millis)
 
-    for i in range (0, 100):
+    for i in range(0, 1000):
+        start_millis = int(round(time.time() * 1000))
+        print(start_millis)
         main()
-    final_millis = int(round(time.time())*1000)
-    print(final_millis - start_millis , end="")
-    print("ms")
-    # main()
+        final_millis = int(round(time.time()) * 1000)
+        file = open('/home/amirhosein/Desktop/test', 'a')
+        file.write(str(final_millis - start_millis) + '\n')
+        file.close()
