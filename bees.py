@@ -256,6 +256,6 @@ if __name__ == '__main__':
         start_millis = int(round(time.time() * 1000))
         main()
         final_millis = int(round(time.time()) * 1000)
-        file = open('/home/amirhosein/Desktop/test', 'a')
+        file = open('ABC-time', 'a')
         file.write(str(final_millis - start_millis) + '\n')
         file.close()
