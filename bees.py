@@ -21,7 +21,7 @@ def read_data_from_csv(file_name):
     data_list = []
     with open(file_name) as f:
         reader = csv.reader(f)
-        data_list = [[int(s) for s in row.split(',')] for row in f]
+        data_list = [[float(s) for s in row.split(' ')] for row in f]
     return data_list
 
 
@@ -51,7 +51,7 @@ def get_total_distance_of_path(path, table):
     new_path = new_path[1:len(new_path)]
 
     coordinates = zip(path, new_path)
-    distance = sum([table[i[0]][i[1]] for i in coordinates])
+    distance = sum([table[int(i[0])][int(i[1])] for i in coordinates])
     return round(distance, 3)
 
 
@@ -206,7 +206,7 @@ def main():
     cycle_limit = 2500
     cycle = 1
 
-    data = read_data_from_csv("data/data_12.csv")
+    data = read_data_from_csv("dataset.csv")
 
     best_distance = sys.maxsize
     best_path = []
