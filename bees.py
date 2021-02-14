@@ -213,7 +213,7 @@ def main():
     result = ()
 
     print("Files has saved ")
-    result_file = "results/{}_nodes/results_{}_nodes_{}_bees_{}_scouts_{}_cycles_{}_forager_limit.csv".format(len(data),
+    result_file = "ABC-result.csv".format(len(data),
                                                                                                               len(data),
                                                                                                               population,
                                                                                                               scout_count,
@@ -254,7 +254,6 @@ if __name__ == '__main__':
 
     for i in range(0, 1000):
         start_millis = int(round(time.time() * 1000))
-        print(start_millis)
         main()
         final_millis = int(round(time.time()) * 1000)
         file = open('/home/amirhosein/Desktop/test', 'a')
