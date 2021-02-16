@@ -196,7 +196,7 @@ def make_csv(data, file_name):
 
 def main():
     # Control parameters
-    population = 180
+    population = 1000
     forager_percent = 0.5
     onlooker_percent = 0.5
     role_percent = [onlooker_percent, forager_percent]
@@ -206,7 +206,7 @@ def main():
     cycle_limit = 2500
     cycle = 1
 
-    data = read_data_from_csv("dataset.csv")
+    data = read_data_from_csv("zi929.tsp")
 
     best_distance = sys.maxsize
     best_path = []
@@ -252,7 +252,7 @@ def main():
 
 if __name__ == '__main__':
 
-    for i in range(0, 1000):
+    # for i in range(0, 1000):
         start_millis = int(round(time.time() * 1000))
         main()
         final_millis = int(round(time.time()) * 1000)
